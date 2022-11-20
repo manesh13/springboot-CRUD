@@ -7,6 +7,12 @@ import java.util.Date;
 @Entity
 @Table(name = "students")
 public class Students {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    private String name;
+
     public Integer getId() {
         return id;
     }
@@ -31,20 +37,15 @@ public class Students {
         this.number = number;
     }
 
-    public Date getDOB() {
-        return DOB;
+    public Date getDob() {
+        return dob;
     }
 
-    public void setDOB(Date DOB) {
-        this.DOB = DOB;
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
-    private String name;
     private Long number;
-    private Date DOB;
+    private Date dob;
 
 }
