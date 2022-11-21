@@ -2,10 +2,9 @@ package com.manesh.entities;
 
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Table(name = "students")
+@Table(name = "Students")
 public class Students {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,15 +36,6 @@ public class Students {
         this.number = number;
     }
 
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
     private Long number;
-    private Date dob;
 
 }

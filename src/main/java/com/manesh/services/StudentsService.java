@@ -13,16 +13,34 @@ public class StudentsService {
     @Autowired
     private StudentsRepo studentsRepo;
 
-    public Students saveStudent(Students students){
+    public StudentsService(StudentsRepo studentsRepo) {
+        this.studentsRepo = studentsRepo;
+    }
+
+    public Students saveStudent(Students students) {
         return studentsRepo.save(students);
     }
 
-    public List<Students> getStudents(){
+    public List<Students> getStudents() {
         return studentsRepo.findAll();
     }
 
-    public void deleteStudent(Integer id) {
-        studentsRepo.deleteById(id);
+    public String delete(int id) {
+        if (studentsRepo.findById(id).isPresent()) {
+            studentsRepo.deleteById(id);
+            return "STUDENT DELETED WITH ID " + id;
+        } else
+            return "NO STUDENT PRESET WITH ID" + id;
     }
 
+    public String update(int id, Students students) {
+        if (studentsRepo.findById(id).isPresent()) {
+            Students studentUpdate = studentsRepo.findById(id).get();
+            studentUpdate.setName(students.getName());
+            studentUpdate.setNumber(students.getNumber());
+            studentsRepo.save(studentUpdate);
+            return "UPDATED";
+        } else
+            return "NO STUDENT PRESET WITH ID" + id;
+    }
 }
