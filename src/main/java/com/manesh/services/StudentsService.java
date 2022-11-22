@@ -1,6 +1,7 @@
 package com.manesh.services;
 
 import com.manesh.entities.Students;
+import com.manesh.exception.ResourceNotFoundException;
 import com.manesh.repositories.StudentsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class StudentsService {
             studentsRepo.deleteById(id);
             return "STUDENT DELETED WITH ID " + id;
         } else
-            return "NO STUDENT PRESET WITH ID" + id;
+            throw new ResourceNotFoundException("NO STUDENT PRESET WITH ID" + id);
     }
 
     public String update(int id, Students students) {
@@ -41,6 +42,6 @@ public class StudentsService {
             studentsRepo.save(studentUpdate);
             return "UPDATED";
         } else
-            return "NO STUDENT PRESET WITH ID" + id;
+            throw new ResourceNotFoundException("NO STUDENT PRESET WITH ID" + id);
     }
 }
