@@ -13,6 +13,11 @@ Spring boot CRUD (Create, Read, Update, Delete) demo application with MySQL db.
 - Postman (or any RESTful API testing tool)
 - MySQL Workbench (for monitoring stored data)
 
+## Setup DB
+- Download MySQL workbench and create a databse
+> **```create database students```** it will create a db locally
+- Then
+> **```use students```**  this will start using db students
 
 ###  Build and Run application
 _GOTO >_ **~/absolute-path-to-directory/springboot-CRUD**  
