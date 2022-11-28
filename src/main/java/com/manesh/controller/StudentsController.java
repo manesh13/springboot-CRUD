@@ -1,13 +1,14 @@
 package com.manesh.controller;
 
 import com.manesh.entities.Students;
+import com.manesh.exception.ResourceNotFoundException;
 import com.manesh.services.StudentsService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,33 +22,33 @@ public class StudentsController {
         this.studentsService = studentsService;
     }
 
-    @ApiOperation(value = "View a list of available products", response = Iterable.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully retrieved list"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    }
-    )
-
-    @PostMapping("/add")
-    public Students addStudents(@RequestBody Students students){
-        return studentsService.saveStudent(students);
-//        code 201
-    }
+//
     @GetMapping("/students")
     public List<Students> getStudents(){
         return studentsService.getStudents();
     }
 
+    @GetMapping("/student/{id}")
+    public ResponseEntity<Students> getStudent(@PathVariable("id") int id) throws ResourceNotFoundException {
+        Students studentById = studentsService.getStudentById(id);
+        return ResponseEntity.ok(studentById);
+    }
+    
+    @PostMapping("/add")
+    public ResponseEntity<Students> addStudents(@Valid @RequestBody Students student){
+        Students savedStudent = studentsService.saveStudent(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedStudent);
+    }
+
     @DeleteMapping("/remove/{id}")
-    public String deleteStudent(@PathVariable int id){
-        return studentsService.delete(id);
-//        return custom status code with a custom mesg
+    public ResponseEntity<Students> deleteStudent(@PathVariable("id") int id) throws ResourceNotFoundException{
+        studentsService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update/{id}")
-    public String updateStudent(@PathVariable int id,@RequestBody Students students){
-        return studentsService.update(id,students);
+    public ResponseEntity<Students> updateStudent(@PathVariable("id") int id,@Valid @RequestBody Students students) throws ResourceNotFoundException{
+        Students updatedStudent = studentsService.update(id,students);
+        return ResponseEntity.ok(updatedStudent);
     }
 }

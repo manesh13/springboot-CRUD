@@ -1,11 +1,10 @@
 package com.manesh.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.manesh.entities.Students;
 import com.manesh.repositories.StudentsRepo;
-import org.junit.Before;
+import com.manesh.services.StudentsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,25 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,6 +35,9 @@ class StudentsControllerTest {
 
     @InjectMocks
     private StudentsController studentsController;
+
+    @Mock
+    private StudentsService studentsService;
 
     Students student1 = Students.builder()
             .id(1)
@@ -67,34 +57,52 @@ class StudentsControllerTest {
     }
 
     @Test
-    public void getStudents_success() throws Exception {
+     void getStudents_success() {
         List<Students> studentsList = new ArrayList<>(Arrays.asList(student1,student2));
         Mockito.when(studentsRepo.findAll()).thenReturn(studentsList);
-//
+        Assertions.assertEquals(2,studentsRepo.findAll().size());
+
 //        mockMvc.perform(MockMvcRequestBuilders
 //                .get("/students")
-//                .contentType(MediaType.APPLICATION_JSON));
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(2)));
+//                .andExpect(jsonPath("$",notNullValue()))
+//                .andExpect(jsonPath("$.id",is(3)));;
     }
 
     @Test
-    public void addStudents_success() throws Exception {
+     void addStudents_success() {
         Students student3 = Students.builder()
                 .id(3)
                 .name("abcd")
                 .number(98776554L)
                 .build();
-        Mockito.when(studentsRepo.save(student3)).thenReturn(student3);
+        Mockito.when(studentsService.saveStudent(student3)).thenReturn(student3);
+        Assertions.assertNotNull(studentsService);
 
-        String content = objectWriter.writeValueAsString(student3);
-
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content);
+//        String content = objectWriter.writeValueAsString(student3);
 //
+//        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/add")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .content(content);
+
 //        mockMvc.perform(mockRequest)
 ////                .andExpect(status().isOk())
 //                .andExpect(jsonPath("$",notNullValue()))
 //                .andExpect(jsonPath("$.id",is(3)));
+    }
+
+//    @Test
+//     void deleteStudent_success(){
+//        studentsService.delete(1);
+//        Mockito.when(studentsService.delete(1)).thenReturn("DELETED");
+//        Assertions.assertFalse(studentsRepo.findById(1).isPresent());
+//    }
+
+    @Test
+     void updateStudent_success(){
+
     }
 }
