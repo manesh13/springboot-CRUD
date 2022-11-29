@@ -1,10 +1,12 @@
 package com.manesh.exception;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +16,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
@@ -41,10 +42,21 @@ public class GlobalExceptionalHandling extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity <Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String error = "No handler found for " + ex.getHttpMethod() + " " + ex.getRequestURL();
-        List<String> errors = new ArrayList<>();
-        errors.add(error);
-        ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), ex.getLocalizedMessage(), Collections.singletonList(error));
+        ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), ex.getLocalizedMessage(), null);
+        return this.handleExceptionInternal(ex, errorResponse, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        pageNotFoundLogger.warn(ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), ex.getLocalizedMessage(), null);
+        return this.handleExceptionInternal(ex, errorResponse, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String error = "id should be of type "+ ex.getRequiredType().getName();
+        ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), error, null);
         return this.handleExceptionInternal(ex, errorResponse, headers, status, request);
     }
 
