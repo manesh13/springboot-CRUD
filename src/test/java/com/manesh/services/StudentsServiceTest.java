@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
-class StudentsServiceTest2 {
+class StudentsServiceTest {
 
     @InjectMocks
     StudentsService studentsService;
