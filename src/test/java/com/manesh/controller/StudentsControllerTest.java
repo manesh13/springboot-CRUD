@@ -5,8 +5,10 @@ import com.manesh.entities.Students;
 import com.manesh.services.StudentsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @ContextConfiguration
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class StudentsControllerTest {
 
     @Autowired
@@ -85,7 +87,7 @@ class StudentsControllerTest {
 
         when(studentsService.saveStudent(any(Students.class))).thenReturn(student1);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/add")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/student")
                         .content(new ObjectMapper().writeValueAsString(student1))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -104,9 +106,9 @@ class StudentsControllerTest {
         studentsList.add(student1);
         studentsList.add(student2);
 
-        when(studentsService.getStudentById(anyInt())).thenReturn(student1);
+//        when(studentsService.getStudentById(anyInt())).thenReturn(student1);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/remove/{id}",1))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/student/{id}",1))
                 .andExpect(status().isNoContent())
         ;
 
@@ -117,10 +119,10 @@ class StudentsControllerTest {
         Students student1 = Students.builder().id(1).name("Borkar").number(45653L).build();
         Students updateStudent = Students.builder().id(1).name("manesh").number(12345L).build();
 
-        when(studentsService.getStudentById(anyInt())).thenReturn(student1);
+//        when(studentsService.getStudentById(anyInt())).thenReturn(student1);
         when(studentsService.update(1,updateStudent)).thenReturn(updateStudent);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/api/update/{id}",1)
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/api/student/{id}",1)
                         .content(new ObjectMapper().writeValueAsString(updateStudent))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))

@@ -34,19 +34,19 @@ public class StudentsController {
         return ResponseEntity.ok(studentById);
     }
     
-    @PostMapping("/add")
+    @PostMapping("/student")
     public ResponseEntity<Students> addStudents(@Valid @RequestBody Students student){
         Students savedStudent = studentsService.saveStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStudent);
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/student/{id}")
     public ResponseEntity<Students> deleteStudent(@PathVariable("id") int id) throws ResourceNotFoundException{
         studentsService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/student/{id}")
     public ResponseEntity<Students> updateStudent(@PathVariable("id") int id,@Valid @RequestBody Students students) throws ResourceNotFoundException{
         Students updatedStudent = studentsService.update(id,students);
         return ResponseEntity.ok(updatedStudent);
